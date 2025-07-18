@@ -1,7 +1,5 @@
-const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("database.sqlite");
-
 db.serialize(() => {
+  // Booking table
   db.run(`
     CREATE TABLE IF NOT EXISTS bookings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -10,6 +8,23 @@ db.serialize(() => {
       dropoff TEXT NOT NULL
     )
   `);
-});
 
-module.exports = db;
+  // Admin table
+  db.run(`
+    CREATE TABLE IF NOT EXISTS admins (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL
+    )
+  `);
+
+  // Create default admin if not exists
+  db.get("SELECT * FROM admins WHERE username = ?", ["admin"], (err, row) => {
+    if (!row) {
+      db.run("INSERT INTO admins (username, password) VALUES (?, ?)", [
+        "admin",
+        "admin123", // 🔐 You should hash this in production!
+      ]);
+    }
+  });
+});
