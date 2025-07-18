@@ -22,30 +22,38 @@
     </section>
   </main>
   <script>
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-
-      const res = await fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        window.location.href = "admin.html";
-      } else {
-        document.getElementById("loginMsg").textContent = "Invalid credentials.";
+  // Check for flash error message
+  fetch("/login/error")
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        document.getElementById("loginMsg").textContent = data.error;
+        document.getElementById("loginMsg").style.color = "red";
       }
     });
 
-    if (data.success) {
-  window.location.href = "admin.html";
-}
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  </script>  
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      window.location.href = "admin.html";
+    } else {
+      // redirect to same page to trigger session-based flash
+      window.location.reload();
+    }
+  });
+</script>
+  
 </body>
 </html>

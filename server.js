@@ -22,12 +22,23 @@ app.post("/login", (req, res) => {
     "SELECT * FROM admins WHERE username = ? AND password = ?",
     [username, password],
     (err, row) => {
-      if (err || !row) return res.json({ success: false });
+      if (err || !row) {
+        req.session.error = "Invalid username or password.";
+        return res.json({ success: false });
+}
       req.session.admin = true;
+      req.session.error = null;
       res.json({ success: true });
     }
   );
 });
+
+app.get("/login/error", (req, res) => {
+  const error = req.session.error;
+  req.session.error = null; // Clear after sending
+  res.json({ error });
+});
+
 
 // This protects admin.html from direct access
 app.get("/admin.html", (req, res) => {
