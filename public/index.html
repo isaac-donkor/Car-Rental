@@ -17,9 +17,9 @@
   <main>
     <section class="booking">
       <h2>Book a Car</h2>
-      <form id="rentalForm">
+      <form id="bookingForm">
         <label for="car">Car:</label>
-        <select id="car">
+        <select id="car" name="car" required>
           <option value="">-- Choose a car --</option>
           <option value="Toyota Corolla">Toyota Corolla</option>
           <option value="Honda Civic">Honda Civic</option>
@@ -27,10 +27,10 @@
         </select>
 
         <label for="pickup">Pickup Date:</label>
-        <input type="date" id="pickup" required />
+        <input type="date" id="pickup" name="pickup" required />
 
         <label for="dropoff">Drop-off Date:</label>
-        <input type="date" id="dropoff" required />
+        <input type="date" id="dropoff" name="dropoff" required />
 
         <button type="submit">Book Now</button>
       </form>
@@ -43,6 +43,19 @@
     <p>&copy; 2025 Prometheus Inc.</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const response = await fetch("/book", {
+        method: "POST",
+        body: new URLSearchParams(formData),
+      });
+
+      const message = await response.text();
+      document.getElementById("confirmation").textContent = message;
+      document.getElementById("bookingForm").reset();
+    });
+  </script>
 </body>
 </html>

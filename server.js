@@ -3,8 +3,10 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const db = require("./db");
 const path = require("path");
-
 const app = express();
+
+app.use(express.static("public")); //wherever static files are
+app.use(express.urlencoded({ extended: true })); //This is required to parse form data
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
@@ -91,7 +93,7 @@ app.post("/change-password", (req, res) => {
 
 
 // API: Add Booking
-app.post("/api/bookings", (req, res) => {
+app.post("/bookings", (req, res) => {
   const { car, pickup, dropoff } = req.body;
   db.run(
     `INSERT INTO bookings (car, pickup, dropoff) VALUES (?, ?, ?)`,
@@ -103,8 +105,17 @@ app.post("/api/bookings", (req, res) => {
   );
 });
 
+app.post("/book", (req, res) => {
+  const { car, pickup, dropoff } = req.body;
+  db.run("INSERT INTO bookings (car, pickup, dropoff) VALUES (?, ?, ?)", [car, pickup, dropoff], (err) => {
+    if (err) return res.status(500).send("Failed to book");
+    res.send("Booking successful");
+  });
+});
+
+
 // API: Get Bookings (secured)
-app.get("/api/bookings", (req, res) => {
+app.get("/bookings", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ error: "Unauthorized" });
   db.all(`SELECT * FROM bookings`, [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -113,7 +124,7 @@ app.get("/api/bookings", (req, res) => {
 });
 
 // API: Delete Booking (secured)
-app.delete("/api/bookings/:id", (req, res) => {
+app.delete("/bookings/:id", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ error: "Unauthorized" });
   db.run(`DELETE FROM bookings WHERE id = ?`, [req.params.id], function (err) {
     if (err) return res.status(500).json({ error: err.message });
