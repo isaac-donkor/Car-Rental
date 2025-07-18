@@ -12,7 +12,18 @@ document.getElementById("rentalForm").addEventListener("submit", function (e) {
     return;
   }
 
-  confirmation.textContent = `Booking Confirmed! You've booked a ${car} from ${pickup} to ${dropoff}.`;
+  const booking = {
+    car,
+    pickup,
+    dropoff,
+    id: Date.now()
+  };
+
+  let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+  bookings.push(booking);
+  localStorage.setItem("bookings", JSON.stringify(bookings));
+
+  confirmation.textContent = `Booking Confirmed for ${car} from ${pickup} to ${dropoff}.`;
   confirmation.style.color = "green";
 
   this.reset();
