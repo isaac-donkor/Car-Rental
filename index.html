@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Rental Service</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Car Rental</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Cars</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="booking">
+      <h2>Book a Car</h2>
+      <form id="rentalForm">
+        <label for="car">Select Car:</label>
+        <select id="car">
+          <option value="">-- Choose a car --</option>
+          <option value="Toyota Corolla">Toyota Corolla</option>
+          <option value="Honda Civic">Honda Civic</option>
+          <option value="Ford Explorer">Ford Explorer</option>
+        </select>
+
+        <label for="pickup">Pickup Date:</label>
+        <input type="date" id="pickup" required />
+
+        <label for="dropoff">Drop-off Date:</label>
+        <input type="date" id="dropoff" required />
+
+        <button type="submit">Book Now</button>
+      </form>
+
+      <div id="confirmation"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Prometheus Inc. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
