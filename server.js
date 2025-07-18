@@ -29,6 +29,15 @@ app.post("/login", (req, res) => {
   );
 });
 
+// This protects admin.html from direct access
+app.get("/admin.html", (req, res) => {
+  if (req.session.admin) {
+    res.sendFile(path.join(__dirname, "admin.html"));
+  } else {
+    res.redirect("/login.html");
+  }
+});
+
 // Middleware to protect admin
 app.use("/admin.html", (req, res, next) => {
   if (req.session.admin) {

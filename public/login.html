@@ -41,6 +41,11 @@
         document.getElementById("loginMsg").textContent = "Invalid credentials.";
       }
     });
-  </script>
+
+    if (data.success) {
+  window.location.href = "admin.html";
+}
+
+  </script>  
 </body>
 </html>
