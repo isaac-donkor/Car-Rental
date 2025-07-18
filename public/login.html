@@ -18,7 +18,23 @@
 
         <button type="submit">Login</button>
       </form>
+
+<a href="#" id="toggleChangePassword">Change Password</a>
+
+<div id="changePasswordContainer" style="display: none; margin-top: 20px;">
+      <h3>Change Password</h3>
+<form id="changePasswordForm">
+  <input type="text" id="cpUsername" placeholder="Username" required><br>
+  <input type="password" id="oldPassword" placeholder="Old Password" required><br>
+  <input type="password" id="newPassword" placeholder="New Password" required><br>
+  <button type="submit">Change Password</button>
+</form>
+<div id="cpMsg"></div>
+</div>
+
       <div id="loginMsg"></div>
+      
+
     </section>
   </main>
   <script>
@@ -53,7 +69,36 @@
       window.location.reload();
     }
   });
-</script>
   
+//Toggle Change Password
+document.getElementById("toggleChangePassword").addEventListener("click", (e) => {
+  e.preventDefault();
+  const cpContainer = document.getElementById("changePasswordContainer");
+  cpContainer.style.display = cpContainer.style.display === "none" ? "block" : "none";
+});
+
+
+  //Change Password
+  document.getElementById("changePasswordForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById("cpUsername").value;
+  const oldPassword = document.getElementById("oldPassword").value;
+  const newPassword = document.getElementById("newPassword").value;
+
+  const res = await fetch("/change-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, oldPassword, newPassword })
+  });
+
+  const data = await res.json();
+  const cpMsg = document.getElementById("cpMsg");
+
+  cpMsg.textContent = data.message;
+  cpMsg.style.color = data.success ? "green" : "red";
+});
+
+</script>
 </body>
 </html>

@@ -58,6 +58,38 @@ app.use("/admin.html", (req, res, next) => {
   }
 });
 
+//API:Change Password
+app.post("/change-password", (req, res) => {
+  const { username, oldPassword, newPassword } = req.body;
+
+  db.get(
+    "SELECT * FROM admins WHERE username = ? AND password = ?",
+    [username, oldPassword],
+    (err, row) => {
+      if (err) {
+        return res.status(500).json({ success: false, message: "Server error." });
+      }
+
+      if (!row) {
+        return res.status(401).json({ success: false, message: "Old password is incorrect." });
+      }
+
+      db.run(
+        "UPDATE admins SET password = ? WHERE username = ?",
+        [newPassword, username],
+        (err2) => {
+          if (err2) {
+            return res.status(500).json({ success: false, message: "Password update failed." });
+          }
+
+          res.json({ success: true, message: "Password changed successfully." });
+        }
+      );
+    }
+  );
+});
+
+
 // API: Add Booking
 app.post("/api/bookings", (req, res) => {
   const { car, pickup, dropoff } = req.body;
