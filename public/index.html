@@ -47,8 +47,8 @@
     document.getElementById("bookingForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
-      const response = await fetch("/book", {
-        method: "POST",
+      const response = await fetch("/bookings", 
+      { method: "POST",
         body: new URLSearchParams(formData),
       });
 

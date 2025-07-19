@@ -5,8 +5,6 @@ const db = require("./db");
 const path = require("path");
 const app = express();
 
-const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("./database.db");
 
 // Create bookings table if it doesn't exist
 db.run(`
@@ -20,10 +18,10 @@ db.run(`
 
 
 app.use(express.static("public")); //wherever static files are
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true })); //This is required to parse form data
 
-app.use(bodyParser.json());
-app.use(express.static("public"));
+
 
 app.use(session({
   secret: "secureSecretKey123", // 🔐 Change this in production
@@ -119,7 +117,7 @@ app.post("/bookings", (req, res) => {
   );
 });
 
-app.post("/book", (req, res) => {
+app.post("/bookings", (req, res) => {
   const { car, pickup, dropoff } = req.body;
   db.run("INSERT INTO bookings (car, pickup, dropoff) VALUES (?, ?, ?)", [car, pickup, dropoff], (err) => {
     if (err) return res.status(500).send("Failed to book");
