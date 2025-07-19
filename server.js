@@ -5,6 +5,20 @@ const db = require("./db");
 const path = require("path");
 const app = express();
 
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("./database.db");
+
+// Create bookings table if it doesn't exist
+db.run(`
+  CREATE TABLE IF NOT EXISTS bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    car TEXT,
+    pickup TEXT,
+    dropoff TEXT
+  )
+`);
+
+
 app.use(express.static("public")); //wherever static files are
 app.use(express.urlencoded({ extended: true })); //This is required to parse form data
 
