@@ -144,6 +144,19 @@ app.delete("/bookings/:id", (req, res) => {
   });
 });
 
+
+//API:fetch Booking
+app.get("/bookings", (req, res) => {
+  db.all("SELECT * FROM bookings", [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ error: "Failed to retrieve bookings" });
+    }
+    res.json(rows);
+  });
+});
+
+
 // Logout
 app.get("/logout", (req, res) => {
   req.session.destroy();

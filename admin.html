@@ -18,7 +18,19 @@
   <main>
     <section class="booking">
       <h2>All Bookings</h2>
-      <div id="bookingList"></div>
+        <table id="bookingsTable" border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Car</th>
+            <th>Pickup</th>
+            <th>Dropoff</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Bookings will be inserted here -->
+        </tbody>
+      </table>
     </section>
   </main>
 
@@ -26,6 +38,34 @@
     <p>&copy; 2025 Prometheus Inc.</p>
   </footer>
 
-  <script src="admin.js"></script>
+  <script src="admin.js">
+    fetch("/bookings")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector("#bookingsTable tbody");
+        if (data.length === 0) {
+          const row = document.createElement("tr");
+          const cell = document.createElement("td");
+          cell.colSpan = 4;
+          cell.textContent = "No bookings found";
+          row.appendChild(cell);
+          tbody.appendChild(row);
+        } else {
+          data.forEach(booking => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${booking.id}</td>
+              <td>${booking.car}</td>
+              <td>${booking.pickup}</td>
+              <td>${booking.dropoff}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      })
+      .catch(error => {
+        console.error("Failed to load bookings:", error);
+      });
+  </script>
 </body>
 </html>
