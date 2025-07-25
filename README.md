@@ -4,4 +4,5 @@ After requirements gathering;
 
 Stack: Node.js, Html, Css and JavaScript.
 
-Client didn't come back after the initial call to build the project, i had some free some time so i did the rest as a newly found hobby lol.
+
+NB: Client didn't come back after the initial call to build the project, i had some free some time so i did the rest as a newly found hobby lol. 
